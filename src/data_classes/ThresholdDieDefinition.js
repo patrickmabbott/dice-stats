@@ -1,4 +1,6 @@
 import NumericDieDefinition from "./NumericDieDefinition";
+import { generateDieResult } from "../utils/StatisticalFunctions";
+import DieFace from "./DieFace"
 
 /**
  * A typical numeric die (i.e. a d8) that doesn't return 1, 2, 3, 4 etc... but rather
@@ -18,7 +20,7 @@ export default class ThresholdDieDefinition extends NumericDieDefinition {
     clone() {
         return new ThresholdDieDefinition( { 
             minValue : this.minValue,
-            maxValue = this.maxValue,
+            maxValue : this.maxValue,
             numSides : this.numSides,
             explodeThreshold : this.explodeThreshold, 
             name : this.name,

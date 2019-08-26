@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import DiePoolReducer from './DiePoolReducer'
+import DiePoolReducer from './DicePoolReducer'
 import StatisticsReducer from './StatisticsReducer'
 import DiceDefinitionReducer from './DiceDefinitionReducer'
 

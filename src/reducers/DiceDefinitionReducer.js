@@ -31,8 +31,8 @@ export default function reduce(state, action) {
         case DELETE_DEFINITION:
             const updatedDicePool = state.dicePool.clone();
             updatedDicePool.removeDice(action.definition, action.count);
-            updatedDicePools = new Map(state.dicePools);
-            dicePools.set(state.currentDicePoolKey, updatedDicePool);
+            const updatedDicePools = new Map(state.dicePools);
+            updatedDicePools.set(state.currentDicePoolName, updatedDicePool);
             return { 
                 ...state, 
                 currentDicePool : updatedDicePool,

@@ -1,11 +1,13 @@
 import { connect } from 'react-redux';
+import DiceChooserComponent from "../components/DiceChooserComponent"
 
 function mapStateToProps(state) {
+    console.log(`TCL: mapStateToProps -> state`, state)
     const {
-        dicePool: { dicePool }
+        dicePoolStore: { dicePools, currentDicePool }
     } = state;
     return {
-        dicePool
+        dicePool : currentDicePool
     };
 }
 

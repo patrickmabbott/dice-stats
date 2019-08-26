@@ -1,4 +1,5 @@
 import DieDefinition from "./DieDefinition"
+import DieFaceCount from "./DieFaceCount"
 import { generateDieResult } from "../utils/StatisticalFunctions";
 import DieFace from "./DieFace";
 import _ from "lodash"
@@ -27,7 +28,7 @@ export default class NumericDieDefinition extends DieDefinition {
     clone() {
         return new NumericDieDefinition( { 
             minValue : this.minValue,
-            maxValue = this.maxValue,
+            maxValue : this.maxValue,
             numSides : this.numSides,
             explodeThreshold : this.explodeThreshold, 
             name : this.name
@@ -53,7 +54,7 @@ export default class NumericDieDefinition extends DieDefinition {
                 diceCounts.get(diceCounts).count++;
             }
             else {
-                diceCounts.set(face.name, new DiceFaceCount({ dieFace : face, count : 1}));
+                diceCounts.set(face.name, new DieFaceCount({ dieFace : face, count : 1}));
             }
         })
     }

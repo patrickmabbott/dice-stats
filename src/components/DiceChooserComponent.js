@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 
-class DiceChooserComponent extends Component {
+export default class DiceChooserComponent extends Component {
     render() {
         const { dicePool } = this.props;
+        console.log(`TCL: DiceChooserComponent -> render -> dicePool`, dicePool)
         return (
             <div>
-                    stub
-                    {dicePool}
+                    {dicePool.diceCounts}
             </div>
         )
     }

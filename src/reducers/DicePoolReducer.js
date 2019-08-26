@@ -1,4 +1,4 @@
-import { ADD_DIE_TO_POOL, REMOVE_DIE_FROM_POOL, CHOOSE_POOL_KEY } from "../actions/DiePoolActions";
+import { ADD_DIE_TO_POOL, REMOVE_DIE_FROM_POOL, CHOOSE_POOL_NAME, initializeDicePools } from "../actions/DiePoolActions";
 
 const initializeState = () => {
 
@@ -9,8 +9,8 @@ const initializeState = () => {
 
     return {
         dicePools,
-        currentDicePoolKey : initializationResults.currentKey,
-        currentDicePool : dicePools.get(initializationResults.currentKey)
+        currentDicePoolName : initializationResults.currentName,
+        currentDicePool : dicePools.get(initializationResults.currentName)
     }
 }
 
@@ -21,32 +21,35 @@ export default function reduceDieSets(state, action) {
     }
 
     switch (action.type) {
-        case CHOOSE_POOL_KEY:
+        case CHOOSE_POOL_NAME: {
             return { 
                 ...state, 
-                currentDicePoolKey : action.key,
-                currentDicePool : state.dicePools.get(action.key)
+                currentDicePoolName : action.name,
+                currentDicePool : state.dicePools.get(action.name)
             };
-        case ADD_DIE_TO_POOL:
+        }
+        case ADD_DIE_TO_POOL: {
             const updatedDicePool = state.currentDicePool.clone();
             updatedDicePool.addDice(action.definition, action.count);
-            updatedDicePools = new Map(state.dicePools);
-            dicePools.set(state.currentDicePoolKey, updatedDicePool);
+            const updatedDicePools = new Map(state.dicePools);
+            updatedDicePools.set(state.currentDicePoolName, updatedDicePool);
             return { 
                 ...state, 
                 currentDicePool : updatedDicePool,
                 dicePools : updatedDicePools
             };
-        case REMOVE_DIE_FROM_POOL:
+        }
+        case REMOVE_DIE_FROM_POOL: {
             const updatedDicePool = state.dicePool.clone();
             updatedDicePool.removeDice(action.definition, action.count);
-            updatedDicePools = new Map(state.dicePools);
-            dicePools.set(state.currentDicePoolKey, updatedDicePool);
+            const updatedDicePools = new Map(state.dicePools);
+            updatedDicePools.set(state.currentDicePoolName, updatedDicePool);
             return { 
                 ...state, 
                 currentDicePool : updatedDicePool,
                 dicePools : updatedDicePools
             };
+        }
         default:
             return state;
     }

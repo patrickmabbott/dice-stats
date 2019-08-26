@@ -1,3 +1,5 @@
+import DieFace from "./DieFace";
+
 /**
  * Simple tuple-like definition for tracking the count of certain die faces.
  */

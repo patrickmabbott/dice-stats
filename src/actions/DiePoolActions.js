@@ -2,7 +2,7 @@ import ThresholdDieDefinition from "../data_classes/ThresholdDieDefinition"
 import NumericDieDefinition from "../data_classes/NumericDieDefinition";
 import DicePool from "../data_classes/DicePool";
 
-export const CHOOSE_POOL_KEY = 'CHOOSE_POOL_KEY';
+export const CHOOSE_POOL_NAME = 'CHOOSE_POOL_NAME';
 export const ADD_DIE_TO_POOL = 'ADD_DIE_TO_POOL';
 export const REMOVE_DIE_FROM_POOL = 'REMOVE_DIE_FROM_POOL';
 
@@ -10,24 +10,26 @@ export function initializeDicePools() {
     //TODO: Try to load from webcache once implemented.
 
     //Start out by defining predefined dice and mapping by key
-    const defaultDiceDefinitions = processDefaultDiceDefinitions();
+    const definitions = processDefaultDiceDefinitions();
+    console.log(`TCL: initializeDicePools -> definitions`, definitions)
 
     const dicePools = new Map();
     //Define a D&D pool containing 0 of each die from 4 to 100
-    const dndPool = defineDefaultDiceDefinitions(definitions);
-    dicePools.push(dndPool);
+    const dndPool = defineDndPool(definitions);
+    dicePools.set(dndPool.name, dndPool);
     const arkhamPool = defineArkhamPool(definitions);
-    dicePools.push(arkhamPool);
+    dicePools.set(arkhamPool.name, arkhamPool);
 
     return {
-        diceDefinitions : defaultDiceDefinitions,
-        dicePools
+        diceDefinitions : definitions,
+        dicePools,
+        currentName : dndPool.name
     };
 }
 
 export function defineDndPool(definitions) {
     const diceCounts = new Map();
-    const diceCounts = [4,6,8,10,12,20,100].forEach( entry => {
+    [4,6,8,10,12,20,100].forEach( entry => {
         const definition = definitions.get(`d${entry}`);
         diceCounts.set(definition.name, 0);
     });
@@ -36,10 +38,10 @@ export function defineDndPool(definitions) {
 
 export function defineArkhamPool(definitions) {
     const diceCounts = new Map();
-    definitions.filter( entry => {
+    Array.from(definitions.values()).filter( entry => {
         return entry.name.includes("Arkham")
     }).forEach (entry => {
-        const definition = definitions.get(entry);
+        const definition = definitions.get(entry.name);
         diceCounts.set(definition.name, 0);
     });
     return new DicePool({ diceCounts, name : "Arkham"});
@@ -50,9 +52,9 @@ export function defineArkhamPool(definitions) {
  */
 export function processDefaultDiceDefinitions() {
     let defaultDefinitions = new Map();
-    defaultDefinitions = new Map(defaultDefinitions, defineThresholdDice());
-    defaultDefinitions = new Map(defaultDefinitions, defineBasicNumericDice());
-    return processDefaultDiceDefinitions;
+    defaultDefinitions = new Map([...defaultDefinitions, ...defineThresholdDice()]);
+    defaultDefinitions = new Map([...defaultDefinitions, ...defineBasicNumericDice()]);
+    return defaultDefinitions;
 }
 
 /**
