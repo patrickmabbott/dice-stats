@@ -1,11 +1,12 @@
 import { coalesce } from "../utils/GenericFunctions";
+import DiceCount from "./DiceCount"
 
 export default class DicePool {
     constructor({ diceCounts, staticBonus, staticSecondaryBonuses, name }) {
         this.staticBonus = coalesce(staticBonus, 0);
         this.staticSecondaryBonuses = staticSecondaryBonuses;
         this.name = name;
-        this.diceCounts = new Map(diceCounts);
+        this.diceCounts = diceCounts.slice();
         this.addDice = this.addDice.bind(this);
         this.removeDice = this.removeDice.bind(this);
         this.clone = this.clone.bind(this);
@@ -13,24 +14,29 @@ export default class DicePool {
 
     addDice(dieDefinition, count) {
         count = coalesce(count, 1);
-        const newCount = coalesce(this.diceCounts.get(dieDefinition.name), 0) + count;
-        this.diceCounts.set(dieDefinition.name, newCount);
+        const associatedEntry = this.diceCounts.find( entry => entry.name === dieDefinition.name);
+        const newCount = (associatedEntry ? associatedEntry.count : 0)  + count;
+        if(associatedEntry) {
+            associatedEntry.count++;
+        }
+        else {
+            this.diceCounts.push(new DiceCount({ name : dieDefinition.name, count : newCount}));
+        }
     }
 
     removeDice(dieDefinition, count) {
-        count = coalesce(count, 1);
-        const newCount = coalesce(this.diceCounts.get(dieDefinition.name), 0) - count;
-        //If less than 0, remove it.
-        if(newCount < 0) {
-            this.diceCounts.delete(dieDefinition.name);
+        const associatedEntry = this.diceCounts.find( entry => entry.name === dieDefinition.name);
+        const newCount = (associatedEntry ? associatedEntry.count : 0)  - count;
+        if(associatedEntry) {
+            associatedEntry.count++;
         }
         else {
-            this.diceCounts.set(dieDefinition.name, newCount);
+            this.diceCounts.push(new DiceCount({ name : dieDefinition.name, count : newCount}));
         }
     }
 
     clone() {
-        const diceCounts = new Map(this.diceCounts);
+        const diceCounts = this.diceCounts.slice();
         return new DicePool({
             diceCounts,
             staticBonus : this.staticBonus,

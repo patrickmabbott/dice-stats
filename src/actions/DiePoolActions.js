@@ -27,22 +27,24 @@ export function initializeDicePools() {
     };
 }
 
-export function defineDndPool(definitions) {
-    const diceCounts = new Map();
-    [4,6,8,10,12,20,100].forEach( entry => {
-        const definition = definitions.get(`d${entry}`);
-        diceCounts.set(definition.name, 0);
+export function defineDndPool() {
+    const diceCounts = [4,6,8,10,12,20,100].map( entry => {
+        return {
+            count : 0,
+            name : `d${entry}`
+        }
     });
     return new DicePool({ diceCounts, "name" : "D&D"});
 }
 
 export function defineArkhamPool(definitions) {
-    const diceCounts = new Map();
-    Array.from(definitions.values()).filter( entry => {
+    const diceCounts = Array.from(definitions.values()).filter( entry => {
         return entry.name.includes("Arkham")
-    }).forEach (entry => {
-        const definition = definitions.get(entry.name);
-        diceCounts.set(definition.name, 0);
+    }).map (entry => {
+        return {
+            name : entry.name,
+            count : 0
+        }
     });
     return new DicePool({ diceCounts, name : "Arkham"});
 }
@@ -83,4 +85,28 @@ export function defineThresholdDice() {
     const arkhamBlessD6 = new ThresholdDieDefinition({ name : 'ArkhamBlessDie', numSides : 6, threshold : 4});
     result.set(arkhamBlessD6.name, arkhamBlessD6);
     return result;
+}
+
+function dispatchAddDieToPool(definition, count) {
+    return {
+        type : ADD_DIE_TO_POOL,
+        definition,
+        count
+    }
+}
+
+function dispatchRemoveDieFromPool(definition, count) {
+    return {
+        type : REMOVE_DIE_FROM_POOL,
+        definition,
+        count
+    }
+}
+
+export function requestAddDieToPool(definition, count) {
+    return dispatchAddDieToPool(definition, count);
+}
+
+export function requestRemoveDieToPool(definition, count) {
+    return dispatchRemoveDieFromPool(definition, count);
 }

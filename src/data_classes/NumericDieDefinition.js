@@ -3,6 +3,14 @@ import DieFaceCount from "./DieFaceCount"
 import { generateDieResult } from "../utils/StatisticalFunctions";
 import DieFace from "./DieFace";
 import _ from "lodash"
+import d4Image from '../res/img/d4.svg';
+import d6Image from '../res/img/perspective-dice-six.svg';
+import d8Image from '../res/img/dice-eight-faces-eight.svg';
+import d10Image from '../res/img/d10.svg';
+import d12Image from '../res/img/d12.svg';
+import d20Image from '../res/img/dice-twenty-faces-twenty.svg';
+import d100Image from '../res/img/d10.svg';
+import genericDiceImage from '../res/img/rolling-dices.svg'
 
 /**
  * A die with integer faces from some value to some value, in steps of 1.
@@ -11,6 +19,7 @@ export default class NumericDieDefinition extends DieDefinition {
     constructor(props) {
         super( { dieType : 'numeric', ...props});
         const { minValue, maxValue, numSides} = props;
+
         if(numSides) {
             //If the simpler specification (num sides) is provided, assume the min and max is 1 to nSides
             this.minValue = 1;
@@ -23,6 +32,34 @@ export default class NumericDieDefinition extends DieDefinition {
         if(props.name === undefined) {
             this.name = `d${this.maxValue}`;
         }
+
+        if(!this.image) {
+            switch(this.maxValue) {
+                case 4:
+                    this.image = d4Image;
+                    break;
+                case 6:
+                    this.image = d6Image;
+                    break;
+                case 8:
+                    this.image = d8Image;
+                    break;
+                case 10:
+                case 100:
+                    this.image = d10Image;
+                    break;
+                case 12:
+                    this.image = d12Image;
+                    break;
+                case 20:
+                    this.image = d20Image;
+                    break;
+                default:
+                    this.image = genericDiceImage;
+                    break;
+            }
+        }
+
     }
 
     clone() {

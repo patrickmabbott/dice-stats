@@ -4,9 +4,10 @@
  * will increase its likelihood proportionally 
  */
 export default class DieDefinition {
-    constructor( { dieType, explodeThreshold, name }) {
+    constructor( { dieType, explodeThreshold, name, image }) {
         this.dieType = dieType;
         this.name = name;
+        this.image = image;
         /**
          * If provided, the die will "explode" when the provided number or higher is rolled,
          * adding the results of the subsequent roll to the one that caused the explosion 
@@ -27,7 +28,8 @@ export default class DieDefinition {
         return new DieDefinition( { 
             dieType : this.dieType, 
             explodeThreshold : this.explodeThreshold, 
-            name : this.name
+            name : this.name,
+            image : this.image
         });
     }
 
