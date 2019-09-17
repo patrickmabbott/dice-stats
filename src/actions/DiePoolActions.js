@@ -1,6 +1,7 @@
 import ThresholdDieDefinition from "../data_classes/ThresholdDieDefinition"
 import NumericDieDefinition from "../data_classes/NumericDieDefinition";
 import DicePool from "../data_classes/DicePool";
+import { requestRecalculate } from "./StatisticsActions";
 
 export const CHOOSE_POOL_NAME = 'CHOOSE_POOL_NAME';
 export const ADD_DIE_TO_POOL = 'ADD_DIE_TO_POOL';
@@ -11,7 +12,6 @@ export function initializeDicePools() {
 
     //Start out by defining predefined dice and mapping by key
     const definitions = processDefaultDiceDefinitions();
-    console.log(`TCL: initializeDicePools -> definitions`, definitions)
 
     const dicePools = new Map();
     //Define a D&D pool containing 0 of each die from 4 to 100
@@ -64,7 +64,7 @@ export function processDefaultDiceDefinitions() {
  */
 export function defineBasicNumericDice() {
     const result = new Map();
-    [4,6,8,10,12,20,100].map( entry => {
+    [4,6,8,10,12,20,100].forEach( entry => {
         const definition = new NumericDieDefinition({ numSides : entry });
         result.set(definition.name, definition);
     });
@@ -104,9 +104,17 @@ function dispatchRemoveDieFromPool(definition, count) {
 }
 
 export function requestAddDieToPool(definition, count) {
-    return dispatchAddDieToPool(definition, count);
+    return (dispatch) => {
+        return Promise.resolve(dispatch(dispatchAddDieToPool(definition, count))).then( () => {
+            dispatch(requestRecalculate());
+        });
+    }
 }
 
 export function requestRemoveDieToPool(definition, count) {
-    return dispatchRemoveDieFromPool(definition, count);
+    return (dispatch) => {
+        return Promise.resolve(dispatch(dispatchRemoveDieFromPool(definition, Math.abs(count)))).then( () => {
+            dispatch(requestRecalculate());
+        });
+    }
 }

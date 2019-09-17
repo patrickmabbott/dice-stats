@@ -40,7 +40,7 @@ export default function reduceDieSets(state, action) {
             };
         }
         case REMOVE_DIE_FROM_POOL: {
-            const updatedDicePool = state.dicePool.clone();
+            const updatedDicePool = state.currentDicePool.clone();
             updatedDicePool.removeDice(action.definition, action.count);
             const updatedDicePools = new Map(state.dicePools);
             updatedDicePools.set(state.currentDicePoolName, updatedDicePool);

@@ -28,7 +28,7 @@ export default class DicePool {
         const associatedEntry = this.diceCounts.find( entry => entry.name === dieDefinition.name);
         const newCount = (associatedEntry ? associatedEntry.count : 0)  - count;
         if(associatedEntry) {
-            associatedEntry.count++;
+            associatedEntry.count = newCount;
         }
         else {
             this.diceCounts.push(new DiceCount({ name : dieDefinition.name, count : newCount}));

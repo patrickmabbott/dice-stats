@@ -4,7 +4,7 @@ import DieFace from "./DieFace";
  * Simple tuple-like definition for tracking the count of certain die faces.
  */
 export default class DieFaceCount {
-    constructor(dieFace, count) {
+    constructor({dieFace, count}) {
         this.dieFace = dieFace;
         this.count = count;
 
@@ -12,7 +12,7 @@ export default class DieFaceCount {
     }
 
     clone() {
-        return new DieFace( { 
+        return new DieFaceCount( { 
             dieFace : this.dieFace.clone(),
             count : this.count
         });

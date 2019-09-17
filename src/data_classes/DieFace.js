@@ -12,7 +12,8 @@ export default class DieFace {
         this.primaryValue = coalesce(primaryValue, []);
         //If provided, an array of 
         this.secondaryValues = coalesce(secondaryValues, []);
-        if(name === undefined && primaryValue !== undefined && primaryValue instanceof 'integer') {
+        if(name === undefined && 
+            primaryValue !== undefined) {
             this.name = primaryValue.toString();
         }
         else {

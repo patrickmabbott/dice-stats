@@ -21,7 +21,8 @@ export default class DieDefinition {
 
         this.clone = this.clone.bind(this);
         this.roll = this.roll.bind(this);
-        this.enumerateFaces = this.enumerateFaces.bind(this);
+        this.countFaces = this.countFaces.bind(this);
+        this.getNumFaces = this.getNumFaces.bind(this);
     }
 
     clone() {
@@ -43,8 +44,18 @@ export default class DieDefinition {
      /**
      * Enumerates all possible die faces, returning an array of DieFaceCount objects.
      */
-    enumerateFaces() {
+    countFaces() {
         //TODO: Consider caching this.
         return new Error("Not implemented");
+    }
+
+    /**
+     * Enumerates all possible die faces, returning an array of DieFaceCount objects.
+     */
+    getNumFaces() {
+        //If necessary, default is to enumerate faces and return that.
+        return Array.from(this.countFaces().values()).reduce( (accumulator, cur) => {
+            return accumulator + cur;
+        }, 0);
     }
 }

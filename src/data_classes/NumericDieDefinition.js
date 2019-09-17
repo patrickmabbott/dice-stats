@@ -83,16 +83,21 @@ export default class NumericDieDefinition extends DieDefinition {
      /**
      * Enumerates all possible die faces, returning a map of DieFaceCount objects.
      */
-    enumerateFaces() {
+    countFaces() {
         const diceCounts = new Map();
-        return _.range(this.minValue.this.maxValue).forEach ( value => {
+        _.range(this.minValue, this.maxValue + 1).forEach ( value => {
             const face = new DieFace({ primaryValue : value});
             if(diceCounts.has(face.name)) {
-                diceCounts.get(diceCounts).count++;
+                diceCounts.get(face.name).count++;
             }
             else {
                 diceCounts.set(face.name, new DieFaceCount({ dieFace : face, count : 1}));
             }
         })
+        return diceCounts;
+    }
+
+    getNumFaces() {
+        return this.maxValue - this.minValue + 1;
     }
 }

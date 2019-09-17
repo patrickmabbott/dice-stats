@@ -1,6 +1,6 @@
 import React from 'react';
 import DiceChooserContainer from "./containers/DiceChooserContainer"
-import logo from './logo.svg';
+import StatsContainer from "./containers/StatsContainer"
 import './App.css';
 import 'semantic-ui-css/semantic.min.css'
 
@@ -8,6 +8,7 @@ function App() {
 
     return (
         <div>
+            <StatsContainer/>
             <DiceChooserContainer/>
         </div>
     );

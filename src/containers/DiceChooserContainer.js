@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
-import { requestAddDieToPool } from "../actions/DiePoolActions"
+import { requestAddDieToPool, requestRemoveDieToPool } from "../actions/DiePoolActions"
 import DiceChooserComponent from "../components/DiceChooserComponent"
 
 function mapStateToProps(state) {
-    console.log(`TCL: mapStateToProps -> state`, state)
     const {
         dicePoolStore: { currentDicePool },
         diceDefinitionStore : { definitions }
@@ -20,6 +19,9 @@ function mapDispatchToProps(dispatch) {
         onChangeCount : (definition, countChange) => {
             if(countChange >= 1) {
                 return dispatch(requestAddDieToPool(definition, countChange));
+            }
+            else if(countChange < 0) {
+                return dispatch(requestRemoveDieToPool(definition, countChange));
             }
         }
     }
