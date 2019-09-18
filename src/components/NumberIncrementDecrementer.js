@@ -7,9 +7,9 @@ export default class NumberIncrementDecrementer extends Component {
         const {onChange, value, min, max} = this.props;
         return (
         <div style={{textAlign : 'center'}}>
-            <Icon size='big' name='minus' onClick={ () => { if(value > min) onChange(value - 1) }}/>
-            <Label size='big' type="text" className="number">{value}</Label>
-            <Icon size='big' name='plus' onClick={ () => { if(value < max) onChange(value + 1) }}/>
+            <Icon style={{display: 'inline-block'}} size='large' name='minus' onClick={ () => { if(value > min) onChange(value - 1) }}/>
+            <Label style={{display: 'inline-block'}} size='large' type="text" className="number">{value}</Label>
+            <Icon style={{display: 'inline-block'}} size='large' name='plus' onClick={ () => { if(value < max) onChange(value + 1) }}/>
         </div>
         )
     }

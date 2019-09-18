@@ -18,6 +18,8 @@ export default class DiceChooserEntry extends Component {
                         value={count}
                         onChange={onChangeCount}
                     />
+                    <br/>
+                    <br/>
                 </React.Fragment>
             )
         }
@@ -31,6 +33,8 @@ export default class DiceChooserEntry extends Component {
                         max={DICE_COUNT_MAX} 
                         value={count} 
                         onChange={onChangeCount} />
+                    <br/>
+                    <br/>
                 </React.Fragment>
             )
         }
