@@ -1,20 +1,18 @@
 import React, { Component } from "react";
 import { Grid, Image } from 'semantic-ui-react'
-import NumericInput from "react-numeric-input"
-import InputNumber from "rc-input-number"
+import NumberIncrementDecrementer from "./NumberIncrementDecrementer"
 import 'semantic-ui-css/semantic.min.css'
-import 'rc-input-number/assets/index.css';
 
 export default class DiceChooserEntry extends Component {
     render() {
         const { image, count, name, onChangeCount } = this.props;
-        const DICE_COUNT_MAX = 100;
+        const DICE_COUNT_MAX = 12;
         if(image) {
             return (
                 <React.Fragment>
                     <Image src={image}/>
                     <br/>
-                    <InputNumber
+                    <NumberIncrementDecrementer
                         min={0}
                         max={DICE_COUNT_MAX}
                         value={count}
@@ -28,7 +26,7 @@ export default class DiceChooserEntry extends Component {
                 <React.Fragment>
                     {name}
                     <br/>
-                    <NumericInput 
+                    <NumberIncrementDecrementer 
                         min={0} 
                         max={DICE_COUNT_MAX} 
                         value={count} 

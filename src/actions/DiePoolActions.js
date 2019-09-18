@@ -28,7 +28,7 @@ export function initializeDicePools() {
 }
 
 export function defineDndPool() {
-    const diceCounts = [4,6,8,10,12,20,100].map( entry => {
+    const diceCounts = [4,6,8,10,12,20].map( entry => {
         return {
             count : 0,
             name : `d${entry}`
