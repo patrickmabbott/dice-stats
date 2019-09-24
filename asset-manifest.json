@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/dice-stats/static/css/main.2cce8147.chunk.css",
-    "main.js": "/dice-stats/static/js/main.52cf360d.chunk.js",
-    "main.js.map": "/dice-stats/static/js/main.52cf360d.chunk.js.map",
+    "main.js": "/dice-stats/static/js/main.3d50400e.chunk.js",
+    "main.js.map": "/dice-stats/static/js/main.3d50400e.chunk.js.map",
     "runtime~main.js": "/dice-stats/static/js/runtime~main.c7cb94b6.js",
     "runtime~main.js.map": "/dice-stats/static/js/runtime~main.c7cb94b6.js.map",
     "static/css/2.2f5e3333.chunk.css": "/dice-stats/static/css/2.2f5e3333.chunk.css",
     "static/js/2.2f833dd8.chunk.js": "/dice-stats/static/js/2.2f833dd8.chunk.js",
     "static/js/2.2f833dd8.chunk.js.map": "/dice-stats/static/js/2.2f833dd8.chunk.js.map",
     "index.html": "/dice-stats/index.html",
-    "precache-manifest.67c48a1e4b9aa6c7fd8bd857b04d6c8e.js": "/dice-stats/precache-manifest.67c48a1e4b9aa6c7fd8bd857b04d6c8e.js",
+    "precache-manifest.79cb3f1d14d0e8f532556d4bcba32280.js": "/dice-stats/precache-manifest.79cb3f1d14d0e8f532556d4bcba32280.js",
     "service-worker.js": "/dice-stats/service-worker.js",
     "static/css/2.2f5e3333.chunk.css.map": "/dice-stats/static/css/2.2f5e3333.chunk.css.map",
     "static/css/main.2cce8147.chunk.css.map": "/dice-stats/static/css/main.2cce8147.chunk.css.map",
