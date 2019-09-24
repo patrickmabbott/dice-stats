@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Image } from 'semantic-ui-react'
+import { Grid, Image, Label } from 'semantic-ui-react'
 import NumberIncrementDecrementer from "./NumberIncrementDecrementer"
 import 'semantic-ui-css/semantic.min.css'
 
@@ -10,7 +10,10 @@ export default class DiceChooserEntry extends Component {
         if(image) {
             return (
                 <React.Fragment>
-                    <Image src={image}/>
+                    <Image 
+                    src={image} 
+                    onClick ={ () => { onChangeCount(count + 1)}} 
+                    />
                     <br/>
                     <NumberIncrementDecrementer
                         min={0}
@@ -26,7 +29,7 @@ export default class DiceChooserEntry extends Component {
         else {
             return (
                 <React.Fragment>
-                    {name}
+                    <Label onClick ={ () => { onChangeCount(count + 1)}} >{name}</Label>
                     <br/>
                     <NumberIncrementDecrementer 
                         min={0} 

@@ -1,11 +1,14 @@
 import ThresholdDieDefinition from "../data_classes/ThresholdDieDefinition"
 import NumericDieDefinition from "../data_classes/NumericDieDefinition";
 import DicePool from "../data_classes/DicePool";
+import DiceCount from "../data_classes/DiceCount"
 import { requestRecalculate } from "./StatisticsActions";
 
-export const CHOOSE_POOL_NAME = 'CHOOSE_POOL_NAME';
 export const ADD_DIE_TO_POOL = 'ADD_DIE_TO_POOL';
 export const REMOVE_DIE_FROM_POOL = 'REMOVE_DIE_FROM_POOL';
+export const SAVE_CURRENT_POOL = 'SAVE_CURRENT_POOL';
+export const CLEAR_COUNTS = 'CLEAR_COUNTS';
+export const SET_CURRENT_POOL = 'SET_CURRENT_POOL'
 
 export function initializeDicePools() {
     //TODO: Try to load from webcache once implemented.
@@ -20,6 +23,11 @@ export function initializeDicePools() {
     const arkhamPool = defineArkhamPool(definitions);
     dicePools.set(arkhamPool.name, arkhamPool);
 
+    const preset1 = dndPool.clone();
+    preset1.name = 'preset_1';
+
+    dicePools.set(preset1.name, preset1);
+
     return {
         diceDefinitions : definitions,
         dicePools,
@@ -29,10 +37,10 @@ export function initializeDicePools() {
 
 export function defineDndPool() {
     const diceCounts = [4,6,8,10,12,20].map( entry => {
-        return {
+        return new DiceCount({
             count : 0,
             name : `d${entry}`
-        }
+        })
     });
     return new DicePool({ diceCounts, "name" : "D&D"});
 }
@@ -41,10 +49,10 @@ export function defineArkhamPool(definitions) {
     const diceCounts = Array.from(definitions.values()).filter( entry => {
         return entry.name.includes("Arkham")
     }).map (entry => {
-        return {
-            name : entry.name,
-            count : 0
-        }
+        return new DiceCount({
+            count : 0,
+            name : `d${entry}`
+        })
     });
     return new DicePool({ diceCounts, name : "Arkham"});
 }
@@ -95,6 +103,26 @@ function dispatchAddDieToPool(definition, count) {
     }
 }
 
+function dispatchSaveCurrentPool(newPoolName) {
+    return {
+        type : SAVE_CURRENT_POOL,
+        newPoolName
+    }
+}
+
+function dispatchClearCounts() {
+    return {
+        type : CLEAR_COUNTS
+    }
+}
+
+function dispatchSetCurrentPool(poolName) {
+    return {
+        type : SET_CURRENT_POOL,
+        poolName
+    }
+}
+
 function dispatchRemoveDieFromPool(definition, count) {
     return {
         type : REMOVE_DIE_FROM_POOL,
@@ -108,6 +136,26 @@ export function requestAddDieToPool(definition, count) {
         return Promise.resolve(dispatch(dispatchAddDieToPool(definition, count))).then( () => {
             dispatch(requestRecalculate());
         });
+    }
+}
+
+export function requestSaveCurrentPool(newPoolName) {
+    return (dispatch) => {
+        return Promise.resolve(dispatch(dispatchSaveCurrentPool(newPoolName)));
+    }
+}
+
+export function requestSetCurrentPool(poolName) {
+    return (dispatch) => {
+        return Promise.resolve(dispatch(dispatchSetCurrentPool(poolName))).then( () => {
+            dispatch(requestRecalculate());
+        });
+    }
+}
+
+export function requestClearCounts() {
+    return (dispatch) => {
+        return Promise.resolve(dispatch(dispatchClearCounts()));
     }
 }
 

@@ -36,7 +36,10 @@ export default class DicePool {
     }
 
     clone() {
-        const diceCounts = this.diceCounts.slice();
+        const diceCounts = this.diceCounts.map( entry => {
+            return entry.clone();
+        }
+        );
         return new DicePool({
             diceCounts,
             staticBonus : this.staticBonus,

@@ -1,5 +1,3 @@
-import { coalesce } from "../utils/GenericFunctions";
-
 /**
  * Simple value class that pairs a die definition name and its count (within a pool).
  */

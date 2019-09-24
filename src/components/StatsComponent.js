@@ -27,11 +27,23 @@ export default class DiceChooserComponent extends Component {
 
         const labelData = labels.sort( (a,b) => { return a < b ? -1 : 1 }).map( key => {
             const value = probabilitiesOfInterest.get(key);
+
+            let label;
+            if(labels.length > 25) {
+                label = `${(value * 100).toFixed(0)}`;
+            }
+            else if(labels.length > 15) {
+                label = `${(value * 100).toFixed(0)}%`;
+            }
+            else {
+                label = `${(value * 100).toFixed(1)}%`;
+            }
+
             return {
                 x : key,
                 y : (value + .1) * 100,
-                xOffset : 20,
-                label : `${(value * 100).toFixed(1)}%`
+                xOffset : 10,
+                label
             };
         });
 
@@ -40,8 +52,8 @@ export default class DiceChooserComponent extends Component {
                 <XYPlot
                 yType="linear"
                 xType="ordinal"
-                height={300}
-                width={1200}
+                height={200}
+                width={800}
                 >
                   <LabelSeries
                     animation
