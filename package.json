@@ -10,7 +10,7 @@
     "bootstrap-react-numeric-up-down": "^1.0.5",
     "chart.js": "^1.1.1",
     "gh-pages": "^2.1.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "rc-input-number": "^4.5.0",
     "react": "^16.8.6",
     "react-chartjs": "^1.2.0",
