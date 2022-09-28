@@ -4,7 +4,9 @@ const initialState = {
     isCalculationCurrent : false,
     probabilities : new Map(),
     cumulativeProbabilities : new Map(),
-    mode : 'cumulative'
+    mode : 'cumulative',
+    maxProbabilityEntriesToShow : 20,
+    zoomedResult : undefined
 }
 
 

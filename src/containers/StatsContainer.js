@@ -8,6 +8,7 @@ function mapStateToProps(state) {
             isCalculationCurrent,
             probabilities,
             cumulativeProbabilities,
+            maxProbabilityEntriesToShow,
             mode
         }
     } = state;
@@ -16,6 +17,7 @@ function mapStateToProps(state) {
         isCalculationCurrent,
         probabilities,
         cumulativeProbabilities,
+        maxProbabilityEntriesToShow,
         mode
     };
 }
