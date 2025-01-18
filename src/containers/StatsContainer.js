@@ -1,13 +1,15 @@
 import { connect } from 'react-redux';
 import StatsComponent from "../components/StatsComponent"
-import { requestRecalculate } from '../actions/StatisticsActions';
+import { requestRecalculate, requestSetMode } from '../actions/StatisticsActions';
 
 function mapStateToProps(state) {
     const {
         statisticsStore: { 
             isCalculationCurrent,
-            probabilities,
-            cumulativeProbabilities,
+            primaryProbabilities,
+            secondaryProbabilities,
+            cumulativePrimaryProbabilities,
+            cumulativeSecondaryProbabilities,
             averages,
             maxProbabilityEntriesToShow,
             mode
@@ -16,8 +18,10 @@ function mapStateToProps(state) {
 
     return {
         isCalculationCurrent,
-        probabilities,
-        cumulativeProbabilities,
+        primaryProbabilities,
+        secondaryProbabilities,
+        cumulativePrimaryProbabilities,
+        cumulativeSecondaryProbabilities,
         averages,
         maxProbabilityEntriesToShow,
         mode
@@ -28,7 +32,10 @@ function mapDispatchToProps(dispatch) {
     return {
         onRequestRecalculate : () => {
             return dispatch(requestRecalculate());
-        }
+        },
+        setMode : (mode) => {
+            return dispatch(requestSetMode(mode));
+        },
     }
 }
 

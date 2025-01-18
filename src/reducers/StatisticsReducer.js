@@ -1,9 +1,11 @@
-import { SET_STATISTICS, RESET_STATISTICS } from "../actions/StatisticsActions";
+import { SET_STATISTICS, RESET_STATISTICS, SET_MODE } from "../actions/StatisticsActions";
 
 const initialState = {
     isCalculationCurrent : false,
-    probabilities : new Map(),
-    cumulativeProbabilities : new Map(),
+    primaryProbabilities : new Map(),
+    secondaryProbabilities : new Map(),
+    cumulativePrimaryProbabilities : new Map(),
+    cumulativeSecondaryProbabilities : new Map(),
     averages : { primary : 0, secondary : 0},
     mode : 'cumulative',
     maxProbabilityEntriesToShow : 20,
@@ -17,10 +19,15 @@ export default function reduceStatistics(state = initialState, action) {
     };
     switch (action.type) {
         case SET_STATISTICS:
-            finalState.probabilities = action.probabilities;
-            finalState.cumulativeProbabilities = action.cumulativeProbabilities;
+            finalState.primaryProbabilities = action.primaryProbabilities;
+            finalState.secondaryProbabilities = action.secondaryProbabilities;
+            finalState.cumulativePrimaryProbabilities = action.cumulativePrimaryProbabilities;
+            finalState.cumulativeSecondaryProbabilities = action.cumulativeSecondaryProbabilities;
             finalState.averages = action.averages;
             finalState.isCalculationCurrent = true;
+            break;
+        case SET_MODE:
+            finalState.mode = action.mode;
             break;
         case RESET_STATISTICS:
             finalState = initialState;
