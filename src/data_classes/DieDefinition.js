@@ -38,6 +38,7 @@ export default class DieDefinition {
      * Performs a single roll, providing a dice face as a result.
      */
     roll() {
+        //Expecting this to be overridden by subclasses.
         return new Error("Not implemented");
     }
 
@@ -46,6 +47,7 @@ export default class DieDefinition {
      */
     countFaces() {
         //TODO: Consider caching this.
+        //Expecting this to be overridden by subclasses.
         return new Error("Not implemented");
     }
 
@@ -57,5 +59,12 @@ export default class DieDefinition {
         return Array.from(this.countFaces().values()).reduce( (accumulator, cur) => {
             return accumulator + cur;
         }, 0);
+    }
+
+    /**
+     * Returns the average result of a single die roll. The result is an object with primary and optional secondary values.
+     */
+    average() {
+        return new Error("Not implemented");
     }
 }

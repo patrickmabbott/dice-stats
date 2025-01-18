@@ -100,4 +100,11 @@ export default class NumericDieDefinition extends DieDefinition {
     getNumFaces() {
         return this.maxValue - this.minValue + 1;
     }
+
+    average() {
+        return {
+            primary: (this.minValue + this.maxValue) / 2,
+            secondary: 0
+        };
+    }
 }

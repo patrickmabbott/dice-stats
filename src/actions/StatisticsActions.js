@@ -3,11 +3,12 @@ import { store } from "..";
 export const SET_STATISTICS = 'SET_STATISTICS';
 export const RESET_STATISTICS = 'RESET_STATISTICS';
 
-function dispatchSetStatistics(probabilities, cumulativeProbabilities) {
+function dispatchSetStatistics(probabilities, cumulativeProbabilities, averages) {
     return {
         type : SET_STATISTICS,
         probabilities,
-        cumulativeProbabilities
+        cumulativeProbabilities,
+        averages
     }
 }
 
@@ -31,10 +32,14 @@ export function requestRecalculate() {
     
         const probabilities = produceResultsSemiIterative(
             currentDicePool, definitions);
-    
+
+            
         if(probabilities === undefined) {
-            return dispatch(dispatchSetStatistics(new Map(), new Map()));
+            return dispatch(dispatchSetStatistics(new Map(), new Map(), { primary : 0, secondary : 0}));
         }
+
+        // Create an average (for both primary and secondary values) for the die.
+        const averages = estimateAverage(currentDicePool, definitions);
     
         //Now, go ahead and calculate cumulative probabilities.
     
@@ -59,7 +64,7 @@ export function requestRecalculate() {
             cumulativeProbabilities.set(curResult, newAccumulatedProbability);
             return newAccumulatedProbability;
         }, 0 );
-        return dispatch( dispatchSetStatistics(probabilities, cumulativeProbabilities));
+        return dispatch( dispatchSetStatistics(probabilities, cumulativeProbabilities, averages));
     }
 }
 
@@ -132,5 +137,28 @@ function produceResultsSemiIterative(currentDicePool, definitions) {
     });
 
     return probabilities;
+}
+
+/**
+ * Estimates the average result of a die pool.
+ * Note that the average is broken up into primary and secondary components.
+ */
+function estimateAverage(currentDicePool, definitions) {
+    const dice = currentDicePool.diceCounts;
+    if(dice.length === 0) {
+        throw new Error("Attempting to calculate probabilities with no dice")
+    }
+    return dice.filter( ({ count, name}) => {
+        return count > 0 && definitions.has(name);
+    }).reduce( (accumulator,  {count, name}) => {
+        const curDefinition = definitions.get(name);
+        return {
+            primary : accumulator.primary + curDefinition.average().primary * count,
+            secondary : accumulator.secondary + curDefinition.average().secondary * count
+        };
+    }, {
+        primary : 0,
+        secondary : 0
+    } );
 }
 
