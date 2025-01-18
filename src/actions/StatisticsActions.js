@@ -1,5 +1,4 @@
 import { store } from "..";
-import { isBuffer } from "util";
 
 export const SET_STATISTICS = 'SET_STATISTICS';
 export const RESET_STATISTICS = 'RESET_STATISTICS';
@@ -12,11 +11,11 @@ function dispatchSetStatistics(probabilities, cumulativeProbabilities) {
     }
 }
 
-function dispatchResetStatistics() {
-    return {
-        type : RESET_STATISTICS
-    }
-}
+// function dispatchResetStatistics() {
+//     return {
+//         type : RESET_STATISTICS
+//     }
+// }
 
 export function requestRecalculate() {
     return (dispatch) => {
@@ -34,7 +33,7 @@ export function requestRecalculate() {
             currentDicePool, definitions);
     
         if(probabilities === undefined) {
-            return;
+            return dispatch(dispatchSetStatistics(new Map(), new Map()));
         }
     
         //Now, go ahead and calculate cumulative probabilities.
@@ -63,8 +62,6 @@ export function requestRecalculate() {
         return dispatch( dispatchSetStatistics(probabilities, cumulativeProbabilities));
     }
 }
-
-const MAX_DIE = 10;
 
 // function produceResultsNaive() {
 //     const counts = new Map();

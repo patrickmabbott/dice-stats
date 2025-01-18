@@ -12,8 +12,6 @@ export default class DiceChooserComponent extends Component {
     }
 
     onChangeCount(name, countChange) {
-        console.log(`TCL: DiceChooserComponent -> onChangeCount -> countChange`, countChange)
-        console.log(`TCL: DiceChooserComponent -> onChangeCount -> name`, name)
         const { definitions, onChangeCount } = this.props;
         const definition = definitions.get(name);
         onChangeCount(definition, countChange);
