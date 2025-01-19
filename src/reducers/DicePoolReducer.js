@@ -1,4 +1,4 @@
-import { ADD_DIE_TO_POOL, REMOVE_DIE_FROM_POOL, CHOOSE_POOL_NAME, initializeDicePools, SAVE_CURRENT_POOL, CLEAR_COUNTS, SET_CURRENT_POOL } from "../actions/DiePoolActions";
+import { ADD_DIE_TO_POOL, REMOVE_DIE_FROM_POOL, initializeDicePools, SAVE_CURRENT_POOL, CLEAR_COUNTS, SET_CURRENT_POOL } from "../actions/DiePoolActions";
 import { coalesce } from "../utils/GenericFunctions";
 
 const initializeState = () => {

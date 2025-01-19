@@ -24,10 +24,6 @@ ChartJS.register(
 
 export default class StatsComponent extends Component {
 
-    constructor() {
-        super();
-    }
-
     render() {
         const { 
             primaryProbabilities,
