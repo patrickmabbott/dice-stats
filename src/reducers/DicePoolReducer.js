@@ -47,13 +47,11 @@ export default function reduceDieSets(state, action) {
         }
         case SET_CURRENT_POOL: {
             const { poolName } = action;
-            console.log(`TCL: reduceDieSets -> poolName`, poolName)
             if( coalesce(poolName, '') === '' || !state.dicePools.has(poolName) ) {
                 console.error(`Could not find requested pool by name ${poolName}`);
                 return state;
             }
             const updatedPool = state.dicePools.get(poolName).clone();
-            console.log(`TCL: reduceDieSets -> updatedPool`, updatedPool)
             return {
                 ...state,
                 currentDicePool : updatedPool

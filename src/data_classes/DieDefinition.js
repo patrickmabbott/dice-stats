@@ -1,3 +1,5 @@
+import d6Image from '../res/img/perspective-dice-six.svg';
+
 /**
  * Definition of an individual die, including the various faces that compose it and the count of each face.
  * Assumes each side is equally likely (i.e. a fair die). Note that having more than one copy of a face on different die sides

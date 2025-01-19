@@ -31,7 +31,7 @@ export default class DiceChooserComponent extends Component {
                             {
                                 row1.map( (entry, idx) => {
                                     const { name, count } = entry;
-                                    const image = definitions.get(name).image;
+                                    const image = definitions?.get(name)?.image;
                                     return (
                                         <Grid.Column key={`die${idx}`}>
                                             <DiceChooseEntry 

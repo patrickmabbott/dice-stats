@@ -1,6 +1,7 @@
 import NumericDieDefinition from "./NumericDieDefinition";
 import { generateDieResult } from "../utils/StatisticalFunctions";
 import DieFace from "./DieFace"
+import DieFaceCount from "./DieFaceCount";
 
 /**
  * A typical numeric die (i.e. a d8) that doesn't return 1, 2, 3, 4 etc... but rather
@@ -31,23 +32,28 @@ export default class ThresholdDieDefinition extends NumericDieDefinition {
     roll() {
         const numericRoll = generateDieResult(this.minValue, this.maxValue);
         const result = numericRoll >= this.threshold ? 1 : 0;
-        return new DieFace({ primaryValue : result});
+        return new DieFace({ primaryValue : result, name : result === 1 ? 'Success' : 'Failure'});
     }
 
-     /**
-     * Enumerates all possible die faces, returning a map of DieFaceCount objects.
-     */
-    enumerateFaces() {
+    countFaces() {
         const diceCounts = new Map();
 
         const numFacesReachingThreshold = this.maxValue - this.threshold + 1;
         const numFacesBelowThreshold = this.threshold - this.minValue;
 
-        const faceReachingThreshold = new DieFace({ primaryValue : 1});
-        const faceNotReachingThreshold = new DieFace({ primaryValue : 0});
+        const faceReachingThreshold = new DieFace({ primaryValue : 1, name: 'Success'});
+        const faceNotReachingThreshold = new DieFace({ primaryValue : 0, 'name': 'Failure'});
 
-        diceCounts.set(faceReachingThreshold.name, numFacesReachingThreshold);
-        diceCounts.set(faceNotReachingThreshold.name, numFacesBelowThreshold);
+        diceCounts.set(faceReachingThreshold.name, new DieFaceCount({ count: numFacesReachingThreshold, dieFace: faceReachingThreshold}));
+        diceCounts.set(faceNotReachingThreshold.name, new DieFaceCount({ count: numFacesBelowThreshold, dieFace: faceNotReachingThreshold}));
         return diceCounts;
+    }
+
+    average() {
+        const faces = this.countFaces();
+        return {
+            primary: faces.get('Success').count / this.getNumFaces(),
+            secondary: 0
+        };
     }
 }

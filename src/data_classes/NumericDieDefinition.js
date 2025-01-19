@@ -9,7 +9,6 @@ import d8Image from '../res/img/dice-eight-faces-eight.svg';
 import d10Image from '../res/img/d10.svg';
 import d12Image from '../res/img/d12.svg';
 import d20Image from '../res/img/dice-twenty-faces-twenty.svg';
-import d100Image from '../res/img/d10.svg';
 import genericDiceImage from '../res/img/rolling-dices.svg'
 
 /**

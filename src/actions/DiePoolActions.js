@@ -5,6 +5,8 @@ import DicePool from "../data_classes/DicePool";
 import DiceCount from "../data_classes/DiceCount"
 import DieFace from "../data_classes/DieFace";
 import { requestRecalculate } from "./StatisticsActions";
+import redImage from '../res/img/red-die.svg';
+import blueImage from '../res/img/blue-die.svg';
 
 export const ADD_DIE_TO_POOL = 'ADD_DIE_TO_POOL';
 export const REMOVE_DIE_FROM_POOL = 'REMOVE_DIE_FROM_POOL';
@@ -56,7 +58,7 @@ export function defineArkhamPool(definitions) {
     }).map (entry => {
         return new DiceCount({
             count : 0,
-            name : `d${entry}`
+            name : entry.name
         })
     });
     return new DicePool({ diceCounts, name : "Arkham", isBaseline: true, diceResultNames: { primary : 'Successes'}});
@@ -79,7 +81,7 @@ export function defineDivinityPool(definitions) {
  */
 export function processDefaultDiceDefinitions() {
     let defaultDefinitions = new Map();
-    defaultDefinitions = new Map([...defaultDefinitions, ...defineThresholdDice()]);
+    defaultDefinitions = new Map([...defaultDefinitions, ...defineArkhamDice()]);
     defaultDefinitions = new Map([...defaultDefinitions, ...defineBasicNumericDice()]);
     defaultDefinitions = new Map([...defaultDefinitions, ...defineDivinityDice()]);
     return defaultDefinitions;
@@ -101,14 +103,14 @@ export function defineBasicNumericDice() {
  * Defines some examples of dice that are basically numeric dice
  * but you need to roll 
  */
-export function defineThresholdDice() {
+export function defineArkhamDice() {
     //For a start, only going to define a d6 that produces "1" on a 5 or a 6. i.e. arkham horror.
     const result = new Map();
     const arkhamD6 = new ThresholdDieDefinition({ name : 'ArkhamDie', numSides : 6, threshold : 5});
     result.set(arkhamD6.name, arkhamD6);
-    const arkhamCurseD6 = new ThresholdDieDefinition({ name : 'ArkhamCurseDie', numSides : 6, threshold : 6});
+    const arkhamCurseD6 = new ThresholdDieDefinition({ name : 'ArkhamCurseDie', numSides : 6, threshold : 6, image: redImage});
     result.set(arkhamCurseD6.name, arkhamCurseD6);
-    const arkhamBlessD6 = new ThresholdDieDefinition({ name : 'ArkhamBlessDie', numSides : 6, threshold : 4});
+    const arkhamBlessD6 = new ThresholdDieDefinition({ name : 'ArkhamBlessDie', numSides : 6, threshold : 4, image: blueImage});
     result.set(arkhamBlessD6.name, arkhamBlessD6);
     return result;
 }
