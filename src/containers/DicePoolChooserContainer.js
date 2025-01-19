@@ -6,14 +6,12 @@ function mapStateToProps(state) {
     const {
         dicePoolStore: { 
             currentDicePool,
-            currentDicePoolName,
             dicePools
          }
     } = state;
 
     return {
         dicePool : currentDicePool,
-        currentDicePoolName,
         dicePools
     };
 }

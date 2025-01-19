@@ -2,7 +2,7 @@ import { coalesce } from "../utils/GenericFunctions";
 import DiceCount from "./DiceCount"
 
 export default class DicePool {
-    constructor({ diceCounts, staticBonus, staticSecondaryBonuses, name }) {
+    constructor({ diceCounts, staticBonus, staticSecondaryBonuses, name, diceResultNames }) {
         this.staticBonus = coalesce(staticBonus, 0);
         this.staticSecondaryBonuses = staticSecondaryBonuses;
         this.name = name;
@@ -10,6 +10,10 @@ export default class DicePool {
         this.addDice = this.addDice.bind(this);
         this.removeDice = this.removeDice.bind(this);
         this.clone = this.clone.bind(this);
+        this.diceResultNames = diceResultNames || {
+            primary : 'Primary',
+            secondary : 'Secondary'
+        }
     }
 
     addDice(dieDefinition, count) {
@@ -44,7 +48,8 @@ export default class DicePool {
             diceCounts,
             staticBonus : this.staticBonus,
             staticSecondaryBonuses : this.staticSecondaryBonuses,
-            name : this.name
+            name : this.name,
+            diceResultNames : this.diceResultNames
         });
     }
 }

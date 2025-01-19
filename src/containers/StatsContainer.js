@@ -13,8 +13,12 @@ function mapStateToProps(state) {
             averages,
             maxProbabilityEntriesToShow,
             mode
-        }
+        },
+        dicePoolStore : { currentDicePool },
     } = state;
+
+    //Find the primary and secondary names for the current dice pool.
+    
 
     return {
         isCalculationCurrent,
@@ -24,7 +28,8 @@ function mapStateToProps(state) {
         cumulativeSecondaryProbabilities,
         averages,
         maxProbabilityEntriesToShow,
-        mode
+        mode,
+        diceResultNames : currentDicePool.diceResultNames
     };
 }
 

@@ -38,7 +38,8 @@ export function requestRecalculate() {
     return (dispatch) => {
         const { 
             dicePoolStore : { currentDicePool },
-            diceDefinitionStore : { definitions }
+            diceDefinitionStore : { definitions },
+            optionsStore: { skipAccumulatedProbOfOneHundredPercent}
         } = store.getState();
     
         //For now, assuming numeric dice.
@@ -76,7 +77,10 @@ export function requestRecalculate() {
                 const curResultProbability = probabilities.get(curResult);
                 const newAccumulatedProbability = curResultProbability + 
                     accumulatedProbability;
-                cumulativeProbabilities.set(curResult, newAccumulatedProbability);
+                // Skip accumulated probabilities of 100%. They're not interesting.
+                if(skipAccumulatedProbOfOneHundredPercent && newAccumulatedProbability < 1) {
+                    cumulativeProbabilities.set(curResult, newAccumulatedProbability);
+                }
                 return newAccumulatedProbability;
             }, 0 );
             return cumulativeProbabilities;

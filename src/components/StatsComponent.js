@@ -22,7 +22,7 @@ ChartJS.register(
     Legend
 );
 
-export default class DiceChooserComponent extends Component {
+export default class StatsComponent extends Component {
 
     constructor() {
         super();
@@ -36,7 +36,11 @@ export default class DiceChooserComponent extends Component {
             cumulativeSecondaryProbabilities,
             averages,
             maxProbabilityEntriesToShow,
-            mode 
+            mode,
+            diceResultNames : {
+                primary : primaryName,
+                secondary : secondaryName
+            }
         } = this.props;
         let labels = [];
         let data = [];
@@ -57,6 +61,7 @@ export default class DiceChooserComponent extends Component {
                 break;
             default:
                 probabilities = primaryProbabilities;
+                break;
         }
 
         if (probabilities === undefined || probabilities.size === 0) {
@@ -93,12 +98,12 @@ export default class DiceChooserComponent extends Component {
         const onlyPrimary = secondaryProbabilities.size <= 1;
 
         if(primaryProbabilities.size > 1) {
-            dropdownOptions.push({ key: 'primary', text: onlyPrimary ? 'Individual Probability' : 'Primary Individual Probability', value: 'primary' });
-            dropdownOptions.push({ key: 'cumulative', text: onlyPrimary ? 'Cumulative Probability' : 'Cumulative Probability Primary', value: 'cumulative' });
+            dropdownOptions.push({ key: 'primary', text: onlyPrimary ? 'Probability Exactly' : `${primaryName} Probability Exactly`, value: 'primary' });
+            dropdownOptions.push({ key: 'cumulative', text: onlyPrimary ? 'Probability At Least' : `${primaryName} Probability At Least`, value: 'cumulative' });
         }
         if (secondaryProbabilities.size > 1) {
-            dropdownOptions.push({ key: 'secondary', text: 'Secondary', value: 'secondary' });
-            dropdownOptions.push({ key: 'cumulativeSecondary', text: 'Cumulative Probability Secondary', value: 'cumulativeSecondary' });
+            dropdownOptions.push({ key: 'secondary', text: `${secondaryName} Probability Exactly`, value: 'secondary' });
+            dropdownOptions.push({ key: 'cumulativeSecondary', text: `${secondaryName} Probability At Least`, value: 'cumulativeSecondary' });
         }
 
         // TODO: Make select metric box not show up if there is no data.
@@ -121,7 +126,7 @@ export default class DiceChooserComponent extends Component {
                 />
             </div>
             <Bar
-                height={"90%"}
+                height={"50%"}
                 data={{
                 labels: labels,
                 datasets: [
@@ -154,7 +159,11 @@ export default class DiceChooserComponent extends Component {
                     callbacks: {
                         label: function (context) {
                         if ([labelBelowAverage?.toString(), labelAboveAverage?.toString()].includes(context.label)) {
-                            return context.raw + '%, average= ' + averages.primary;
+                            let result = context.raw + `%, averages= ${primaryName}=${averages.primary.toFixed(2)}`;
+                            if(secondaryProbabilities.size > 1) {
+                                result += `, ${secondaryName}=${averages.secondary.toFixed(2)}`;
+                            }
+                            return result;
                         } else {
                             return context.raw + '%';
                         }
