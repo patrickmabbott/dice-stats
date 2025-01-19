@@ -9,7 +9,6 @@ const initializeState = () => {
     const currentPoolCopy = dicePools.get(currentName).clone();
     return {
         dicePools,
-        currentDicePoolName : currentName,
         currentDicePool : currentPoolCopy
     }
 }
@@ -31,7 +30,6 @@ export default function reduceDieSets(state, action) {
             return {
                 ...state,
                 dicePools : updatedPools,
-                currentDicePoolName : newPoolName,
                 currentDicePool : poolCopy
             }
         }
@@ -58,8 +56,7 @@ export default function reduceDieSets(state, action) {
             console.log(`TCL: reduceDieSets -> updatedPool`, updatedPool)
             return {
                 ...state,
-                currentDicePool : updatedPool,
-                currentDicePoolName : poolName
+                currentDicePool : updatedPool
             };
         }
         case ADD_DIE_TO_POOL: {

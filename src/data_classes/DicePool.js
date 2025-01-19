@@ -2,7 +2,7 @@ import { coalesce } from "../utils/GenericFunctions";
 import DiceCount from "./DiceCount"
 
 export default class DicePool {
-    constructor({ diceCounts, staticBonus, staticSecondaryBonuses, name, diceResultNames }) {
+    constructor({ diceCounts, staticBonus, staticSecondaryBonuses, name, diceResultNames, isBaseline }) {
         this.staticBonus = coalesce(staticBonus, 0);
         this.staticSecondaryBonuses = staticSecondaryBonuses;
         this.name = name;
@@ -14,6 +14,8 @@ export default class DicePool {
             primary : 'Primary',
             secondary : 'Secondary'
         }
+        // If true, this pool represents a starting set of dice definitions for a given game.
+        this.isBaseline = isBaseline;
     }
 
     addDice(dieDefinition, count) {

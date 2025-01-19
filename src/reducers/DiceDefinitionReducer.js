@@ -32,7 +32,7 @@ export default function reduce(state, action) {
             const updatedDicePool = state.dicePool.clone();
             updatedDicePool.removeDice(action.definition, action.count);
             const updatedDicePools = new Map(state.dicePools);
-            updatedDicePools.set(state.currentDicePoolName, updatedDicePool);
+            updatedDicePools.set(updatedDicePool);
             return { 
                 ...state, 
                 currentDicePool : updatedDicePool,

@@ -4,26 +4,33 @@ import 'semantic-ui-css/semantic.min.css'
 
 export default class OptionsComponent extends Component {
     render() {
-        const { game, setGame } = this.props;
+        const { dicePools, currentDicePool, setDicePool } = this.props;
+        const { name } = currentDicePool;
         // TODO: Componentize the Label/dropdown pair for consistency.
 
-        const dropdownOptions = [
-            { key: 'basic', text: 'Basic Dice Set (e.g. D&D)', value: 'basic' },
-            { key: 'divinity', text : 'Divinity Board Game', value: 'divinity' }
-        ];
-
+        const dropdownOptions = Array.from(dicePools.keys()
+        .filter( name => {
+            return dicePools?.get(name)?.isBaseline;
+        })
+        .map( name  => {
+            return {
+                key: name,
+                text: name,
+                value: name
+            }
+        }));
         return (
             <React.Fragment>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1em' }}>
                 <Label style={{ marginRight: '1em' }}>Game</Label>
                 <Dropdown
-                placeholder='Select Game'
+                placeholder='Select Dice Pool'
                 fluid
                 selection
                 options={dropdownOptions}
-                value={game}
+                value={name}
                 onChange={(e, { value }) => {
-                    this.props.setGame(value);
+                    setDicePool(value);
                 }}
                 />
             </div>

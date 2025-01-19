@@ -47,7 +47,7 @@ export function defineDndPool() {
             name : `d${entry}`
         })
     });
-    return new DicePool({ diceCounts, "name" : "D&D"});
+    return new DicePool({ diceCounts, "name" : "D&D", isBaseline: true});
 }
 
 export function defineArkhamPool(definitions) {
@@ -59,7 +59,7 @@ export function defineArkhamPool(definitions) {
             name : `d${entry}`
         })
     });
-    return new DicePool({ diceCounts, name : "Arkham", diceResultNames: { primary : 'Successes'}});
+    return new DicePool({ diceCounts, name : "Arkham", isBaseline: true, diceResultNames: { primary : 'Successes'}});
 }
 
 export function defineDivinityPool(definitions) {
@@ -71,7 +71,7 @@ export function defineDivinityPool(definitions) {
             name : entry.name
         })
     });
-    return new DicePool({ diceCounts, name : "Divinity", diceResultNames: { primary : 'Successes', secondary : 'Crits'}});
+    return new DicePool({ diceCounts, name : "Divinity",  isBaseline: true, diceResultNames: { primary : 'Successes', secondary : 'Crits'}});
 }
 
 /**
