@@ -15,4 +15,11 @@ export default class DieCount {
             count : this.count
         });
     }
+
+    static fromJSON(json) {
+        return new DieCount( { 
+            name : json.name,
+            count : json.count
+        });
+    }
 }

@@ -2,7 +2,7 @@ import { coalesce } from "../utils/GenericFunctions";
 import DiceCount from "./DiceCount"
 
 export default class DicePool {
-    constructor({ diceCounts, staticBonus, staticSecondaryBonuses, name, diceResultNames, isBaseline }) {
+    constructor({ diceCounts, staticBonus, staticSecondaryBonuses, name, diceResultNames, isBaseline, derivedFrom }) {
         this.staticBonus = coalesce(staticBonus, 0);
         this.staticSecondaryBonuses = staticSecondaryBonuses;
         this.name = name;
@@ -16,6 +16,9 @@ export default class DicePool {
         }
         // If true, this pool represents a starting set of dice definitions for a given game.
         this.isBaseline = isBaseline;
+        // If this pool is derived from another pool, store a reference to the original's name.
+        // In the case of baselines, they are their own derived source.
+        this.derivedFrom = derivedFrom || (isBaseline ? name : undefined);
     }
 
     addDice(dieDefinition, count) {
@@ -51,7 +54,21 @@ export default class DicePool {
             staticBonus : this.staticBonus,
             staticSecondaryBonuses : this.staticSecondaryBonuses,
             name : this.name,
-            diceResultNames : this.diceResultNames
+            diceResultNames : this.diceResultNames,
+            isBaseline : false,
+            derivedFrom : this.derivedFrom
+        });
+    }
+
+    static fromJSON(json) {
+        return new DicePool({
+            diceCounts : json.diceCounts.map( entry => DiceCount.fromJSON(entry)),
+            staticBonus : json.staticBonus,
+            staticSecondaryBonuses : json.staticSecondaryBonuses,
+            name : json.name,
+            diceResultNames : json.diceResultNames,
+            isBaseline : json.isBaseline,
+            derivedFrom : json.derivedFrom
         });
     }
 }

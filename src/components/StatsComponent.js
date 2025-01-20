@@ -24,6 +24,10 @@ ChartJS.register(
 
 export default class StatsComponent extends Component {
 
+    componentDidMount() {
+        this.props.onRequestRecalculate();
+    }
+
     render() {
         const { 
             primaryProbabilities,

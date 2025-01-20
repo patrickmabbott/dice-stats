@@ -29,11 +29,6 @@ export function initializeDicePools() {
     const divinityPool = defineDivinityPool(definitions);
     dicePools.set(divinityPool.name, divinityPool);
 
-    const preset1 = dndPool.clone();
-    preset1.name = 'preset_1';
-
-    dicePools.set(preset1.name, preset1);
-
     return {
         diceDefinitions : definitions,
         dicePools,

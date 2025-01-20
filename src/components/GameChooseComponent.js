@@ -5,8 +5,7 @@ import 'semantic-ui-css/semantic.min.css'
 export default class OptionsComponent extends Component {
     render() {
         const { dicePools, currentDicePool, setDicePool } = this.props;
-        const { name } = currentDicePool;
-        // TODO: Componentize the Label/dropdown pair for consistency.
+        const { derivedFrom : name } = currentDicePool;
 
         const dropdownOptions = Array.from(dicePools.keys()
         .filter( name => {
