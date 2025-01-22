@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/dice-stats/static/css/main.d661a8fd.css",
-    "main.js": "/dice-stats/static/js/main.afa636a2.js",
+    "main.js": "/dice-stats/static/js/main.cce478a2.js",
     "static/media/brand-icons.svg": "/dice-stats/static/media/brand-icons.6729d29753e000c17489.svg",
     "static/media/icons.svg": "/dice-stats/static/media/icons.62d9dae4e0040e81c980.svg",
     "static/media/outline-icons.svg": "/dice-stats/static/media/outline-icons.9c4845b4b41ef40a22fa.svg",
@@ -22,15 +22,17 @@
     "static/media/d12.svg": "/dice-stats/static/media/d12.eb261c5b75a83601476072c817b4103b.svg",
     "static/media/rolling-dices.svg": "/dice-stats/static/media/rolling-dices.bded3df44a1c898f2b0c901a7b95e48f.svg",
     "static/media/d10.svg": "/dice-stats/static/media/d10.f4f62869509864d558c9548c4ad51d81.svg",
+    "static/media/blue-die.svg": "/dice-stats/static/media/blue-die.98d1cef2246a67d9e93ea39927059b5d.svg",
+    "static/media/red-die.svg": "/dice-stats/static/media/red-die.1aebc045b2455d2d3be219ec3092fdbb.svg",
     "static/media/perspective-dice-six.svg": "/dice-stats/static/media/perspective-dice-six.5c335b480654a40444c9ec956eb9171e.svg",
     "static/media/dice-eight-faces-eight.svg": "/dice-stats/static/media/dice-eight-faces-eight.7509a7757b8a6882f1ea7611ed7fc7bd.svg",
     "static/media/d4.svg": "/dice-stats/static/media/d4.d7fdd52f51bb663b0056afd3fefa8642.svg",
     "index.html": "/dice-stats/index.html",
     "main.d661a8fd.css.map": "/dice-stats/static/css/main.d661a8fd.css.map",
-    "main.afa636a2.js.map": "/dice-stats/static/js/main.afa636a2.js.map"
+    "main.cce478a2.js.map": "/dice-stats/static/js/main.cce478a2.js.map"
   },
   "entrypoints": [
     "static/css/main.d661a8fd.css",
-    "static/js/main.afa636a2.js"
+    "static/js/main.cce478a2.js"
   ]
 }
