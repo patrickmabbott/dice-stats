@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import 'semantic-ui-css/semantic.min.css'
 import { Dropdown, Label } from 'semantic-ui-react';
 import {
@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { collapseProbabilityResults } from "../utils/StatisticalFunctions";
+import useDiceStore from "../store/diceStore";
 
 ChartJS.register(
     CategoryScale,
@@ -22,158 +23,146 @@ ChartJS.register(
     Legend
 );
 
-export default class StatsComponent extends Component {
+export default function StatsComponent() {
+    const recalculate = useDiceStore(state => state.recalculate);
+    const setMode = useDiceStore(state => state.setMode);
+    const primaryProbabilities = useDiceStore(state => state.primaryProbabilities);
+    const cumulativePrimaryProbabilities = useDiceStore(state => state.cumulativePrimaryProbabilities);
+    const secondaryProbabilities = useDiceStore(state => state.secondaryProbabilities);
+    const cumulativeSecondaryProbabilities = useDiceStore(state => state.cumulativeSecondaryProbabilities);
+    const averages = useDiceStore(state => state.averages);
+    const maxProbabilityEntriesToShow = useDiceStore(state => state.maxProbabilityEntriesToShow);
+    const mode = useDiceStore(state => state.mode);
+    const diceResultNames = useDiceStore(state => state.currentDicePool.diceResultNames);
 
-    componentDidMount() {
-        this.props.onRequestRecalculate();
+    useEffect(() => {
+        recalculate();
+    }, [recalculate]);
+
+    const {
+        primary: primaryName,
+        secondary: secondaryName
+    } = diceResultNames;
+    let labels = [];
+    let data = [];
+    let labelBelowAverage = undefined;
+    let labelAboveAverage = undefined;
+
+    let probabilities;
+    switch(mode) {
+        case 'cumulative':
+            probabilities = cumulativePrimaryProbabilities;
+            break;
+        case 'cumulativeSecondary':
+            probabilities = cumulativeSecondaryProbabilities;
+            break;
+        case 'secondary':
+            probabilities = secondaryProbabilities;
+            break;
+        default:
+            probabilities = primaryProbabilities;
+            break;
     }
 
-    render() {
-        const { 
-            primaryProbabilities,
-            cumulativePrimaryProbabilities,
-            secondaryProbabilities,
-            cumulativeSecondaryProbabilities,
-            averages,
-            maxProbabilityEntriesToShow,
-            mode,
-            diceResultNames : {
-                primary : primaryName,
-                secondary : secondaryName
-            }
-        } = this.props;
-        let labels = [];
-        let data = [];
-        let labelBelowAverage = undefined;
-        let labelAboveAverage = undefined;
+    if (probabilities === undefined || probabilities.size === 0) {
+        labels = [];
+        data = [];
+    } else {
+        const probabilityKeys = Array.from(probabilities.keys()).sort((a, b) => { return a < b ? -1 : 1 });
 
+        const collapsedProbabilityKeys = collapseProbabilityResults(probabilityKeys, maxProbabilityEntriesToShow);
 
-        let probabilities;
-        switch(mode) {
-            case 'cumulative':
-                probabilities = cumulativePrimaryProbabilities;
-                break;
-            case 'cumulativeSecondary':
-                probabilities = cumulativeSecondaryProbabilities;
-                break;
-            case 'secondary':
-                probabilities = secondaryProbabilities;
-                break;
-            default:
-                probabilities = primaryProbabilities;
-                break;
-        }
+        labels = Array.from(
+            collapsedProbabilityKeys).map(entry => { return entry });
 
-        if (probabilities === undefined || probabilities.size === 0) {
-            labels = [];
-            data = [];
-        } else {
-            const probabilityKeys = Array.from(probabilities.keys()).sort((a, b) => { return a < b ? -1 : 1 });
+        labelBelowAverage = labels.findLast(label => label <= averages.primary);
+        labelAboveAverage = labels.find(label => label > averages.primary);
 
-            // Given enough and/or large enough dice, the number of possible results can be quite large.
-            // So, instead of showing a chart with 100 bars, cap the number of bars and only show
-            // every nth bar.
-            const collapsedProbabilityKeys = collapseProbabilityResults(probabilityKeys, maxProbabilityEntriesToShow);
+        data = labels.sort((a, b) => { return a < b ? -1 : 1 }).map(key => {
+            const value = probabilities.get(key);
+            return {
+                x: key,
+                y: parseFloat((value * 100).toFixed(2))
+            };
+        });
+    }
 
-            labels = Array.from(
-                collapsedProbabilityKeys).map(entry => { return entry });
+    const dropdownOptions = [];
 
-            // Precalculate which label is just below and which just above the average. (Below handles exact equality)
-            labelBelowAverage = labels.findLast(label => label <= averages.primary);
-            labelAboveAverage = labels.find(label => label > averages.primary);
+    const onlyPrimary = secondaryProbabilities.size <= 1;
 
-            data = labels.sort((a, b) => { return a < b ? -1 : 1 }).map(key => {
-                const value = probabilities.get(key);
-                return {
-                    x: key,
-                    y: parseFloat((value * 100).toFixed(2))
-                };
-            });
-        }
+    if(primaryProbabilities.size > 1) {
+        dropdownOptions.push({ key: 'primary', text: onlyPrimary ? 'Probability Exactly' : `${primaryName} Probability Exactly`, value: 'primary' });
+        dropdownOptions.push({ key: 'cumulative', text: onlyPrimary ? 'Probability At Least' : `${primaryName} Probability At Least`, value: 'cumulative' });
+    }
+    if (secondaryProbabilities.size > 1) {
+        dropdownOptions.push({ key: 'secondary', text: `${secondaryName} Probability Exactly`, value: 'secondary' });
+        dropdownOptions.push({ key: 'cumulativeSecondary', text: `${secondaryName} Probability At Least`, value: 'cumulativeSecondary' });
+    }
 
-        //Only provide dropdowns that actually have data.
-        const dropdownOptions = [];
-
-        // If we only have one set of probabilities, then we don't need to differentiate between primary and secondary.
-        const onlyPrimary = secondaryProbabilities.size <= 1;
-
-        if(primaryProbabilities.size > 1) {
-            dropdownOptions.push({ key: 'primary', text: onlyPrimary ? 'Probability Exactly' : `${primaryName} Probability Exactly`, value: 'primary' });
-            dropdownOptions.push({ key: 'cumulative', text: onlyPrimary ? 'Probability At Least' : `${primaryName} Probability At Least`, value: 'cumulative' });
-        }
-        if (secondaryProbabilities.size > 1) {
-            dropdownOptions.push({ key: 'secondary', text: `${secondaryName} Probability Exactly`, value: 'secondary' });
-            dropdownOptions.push({ key: 'cumulativeSecondary', text: `${secondaryName} Probability At Least`, value: 'cumulativeSecondary' });
-        }
-
-        // TODO: Make select metric box not show up if there is no data.
-        // However, this is being kept for the same reason as an empty chart. i.e. to maintain consistent layout.
-        // Look into making the spacing external.
-
-        return (
-            <React.Fragment>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1em' }}>
-                <Label style={{ marginRight: '1em' }}>Select Metric</Label>
-                <Dropdown
-                placeholder='Select Metric'
-                fluid
-                selection
-                options={dropdownOptions}
-                value={mode}
-                onChange={(e, { value }) => {
-                    this.props.setMode(value);
-                }}
-                />
-            </div>
-            <Bar
-                height={"50%"}
-                data={{
-                labels: labels,
-                datasets: [
-                    {
-                    label: 'Probability',
-                    data: data.map(d => d.y),
-                    backgroundColor: data.map(d => {
-                        return [labelBelowAverage, labelAboveAverage].includes(d.x) ? 'rgba(255,215,0, 1)' : 'rgba(75, 192, 192, 0.2)';
-                    }),
-                    borderColor: data.map(d => {
-                        return [labelBelowAverage, labelAboveAverage].includes(d.x) ? 'rgba(255,215,0, 1)' : 'rgb(182, 192, 75)';
-                    }),
-                    borderWidth: 1,
-                    },
-                ],
-                }}
-                options={{
-                scales: {
-                    y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function (value) {
-                        return (probabilities.size === 0 ? (value * 100) : value) + '%';
-                        }
-                    }
-                    }
+    return (
+        <React.Fragment>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1em' }}>
+            <Label style={{ marginRight: '1em' }}>Select Metric</Label>
+            <Dropdown
+            placeholder='Select Metric'
+            fluid
+            selection
+            options={dropdownOptions}
+            value={mode}
+            onChange={(e, { value }) => {
+                setMode(value);
+            }}
+            />
+        </div>
+        <Bar
+            height={"50%"}
+            data={{
+            labels: labels,
+            datasets: [
+                {
+                label: 'Probability',
+                data: data.map(d => d.y),
+                backgroundColor: data.map(d => {
+                    return [labelBelowAverage, labelAboveAverage].includes(d.x) ? 'rgba(255,215,0, 1)' : 'rgba(75, 192, 192, 0.2)';
+                }),
+                borderColor: data.map(d => {
+                    return [labelBelowAverage, labelAboveAverage].includes(d.x) ? 'rgba(255,215,0, 1)' : 'rgb(182, 192, 75)';
+                }),
+                borderWidth: 1,
                 },
-                plugins: {
-                    tooltip: {
-                    callbacks: {
-                        label: function (context) {
-                        if ([labelBelowAverage?.toString(), labelAboveAverage?.toString()].includes(context.label)) {
-                            let result = context.raw + `%, averages= ${primaryName}=${averages.primary.toFixed(2)}`;
-                            if(secondaryProbabilities.size > 1) {
-                                result += `, ${secondaryName}=${averages.secondary.toFixed(2)}`;
-                            }
-                            return result;
-                        } else {
-                            return context.raw + '%';
+            ],
+            }}
+            options={{
+            scales: {
+                y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function (value) {
+                    return (probabilities.size === 0 ? (value * 100) : value) + '%';
+                    }
+                }
+                }
+            },
+            plugins: {
+                tooltip: {
+                callbacks: {
+                    label: function (context) {
+                    if ([labelBelowAverage?.toString(), labelAboveAverage?.toString()].includes(context.label)) {
+                        let result = context.raw + `%, averages= ${primaryName}=${averages.primary.toFixed(2)}`;
+                        if(secondaryProbabilities.size > 1) {
+                            result += `, ${secondaryName}=${averages.secondary.toFixed(2)}`;
                         }
-                        }
+                        return result;
+                    } else {
+                        return context.raw + '%';
                     }
                     }
                 }
-                }}
-            />
-            </React.Fragment>
-        )
-    }
+                }
+            }
+            }}
+        />
+        </React.Fragment>
+    );
 }

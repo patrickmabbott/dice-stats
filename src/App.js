@@ -1,7 +1,7 @@
 import React from 'react';
-import DiceChooserContainer from "./containers/DiceChooserContainer"
-import StatsContainer from "./containers/StatsContainer"
-import GameChooserContainer from "./containers/GameChooserContainer"
+import DiceChooserComponent from "./components/DiceChooserComponent"
+import StatsComponent from "./components/StatsComponent"
+import GameChooseComponent from "./components/GameChooseComponent"
 import './App.css';
 import 'semantic-ui-css/semantic.min.css'
 
@@ -9,9 +9,9 @@ function App() {
 
     return (
         <div>
-            <GameChooserContainer/>
-            <StatsContainer/>
-            <DiceChooserContainer/>
+            <GameChooseComponent/>
+            <StatsComponent/>
+            <DiceChooserComponent/>
         </div>
     );
 }
