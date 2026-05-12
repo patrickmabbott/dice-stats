@@ -2,12 +2,15 @@ import React from "react";
 import { Grid, Label, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import useDiceStore from "../store/diceStore";
+import NumberIncrementDecrementer from "./NumberIncrementDecrementer";
 
 export default function DicePoolChooserComponent() {
     const dicePools = useDiceStore(state => state.dicePools);
     const clearCounts = useDiceStore(state => state.clearCounts);
     const setCurrentPool = useDiceStore(state => state.setCurrentPool);
     const saveCurrentPool = useDiceStore(state => state.saveCurrentPool);
+    const currentDicePool = useDiceStore(state => state.currentDicePool);
+    const setRerollCount = useDiceStore(state => state.setRerollCount);
 
     const getPresetName = (rowNum) => {
         return `preset_${rowNum + 1}`;
@@ -25,6 +28,14 @@ export default function DicePoolChooserComponent() {
             <button style={{width : '100%'}}
                 onClick={() => { clearCounts()} }
             >Clear Counts</button>
+            <br/><br/>
+            <NumberIncrementDecrementer
+                label="Rerolls"
+                min={0}
+                max={10}
+                value={currentDicePool?.rerollCount || 0}
+                onChange={(newCount) => setRerollCount(newCount)}
+            />
             <br/><br/>
             <Grid columns={NUM_PRESETS} divided style={{height: 100}}>
                 {

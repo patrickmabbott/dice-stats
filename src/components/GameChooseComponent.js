@@ -4,10 +4,12 @@ import 'semantic-ui-css/semantic.min.css'
 import useDiceStore from "../store/diceStore";
 
 export default function GameChooseComponent() {
-    const dicePools = useDiceStore(state => state.dicePools);
+    const dicePools = useDiceStore(state => {
+        return state.dicePools;
+    });
     const currentDicePool = useDiceStore(state => state.currentDicePool);
     const setCurrentPool = useDiceStore(state => state.setCurrentPool);
-
+    
     const { derivedFrom: name } = currentDicePool;
 
     const dropdownOptions = Array.from(dicePools.keys())

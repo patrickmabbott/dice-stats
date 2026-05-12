@@ -11,12 +11,10 @@ import { coalesce } from '../utils/GenericFunctions';
 const useDiceStore = create(
   persist(
     (set, get) => {
-      const { diceDefinitions, dicePools, currentName } = initializeDicePools();
-
       return {
         // --- Dice Pool Slice ---
-        dicePools,
-        currentDicePool: dicePools.get(currentName).clone(),
+        dicePools: new Map(),
+        currentDicePool: null,
 
         addDie: (definition, count) => {
           set(state => {
@@ -68,8 +66,17 @@ const useDiceStore = create(
           });
         },
 
+        setRerollCount: (count) => {
+          set(state => {
+            const updated = state.currentDicePool.clone();
+            updated.rerollCount = Math.max(0, count);
+            return { currentDicePool: updated };
+          });
+          get().recalculate();
+        },
+
         // --- Dice Definition Slice ---
-        definitions: diceDefinitions,
+        definitions: new Map(),
 
         // --- Statistics Slice ---
         isCalculationCurrent: false,
@@ -160,7 +167,24 @@ const useDiceStore = create(
       partialize: state => ({
         dicePools: state.dicePools,
         currentDicePool: state.currentDicePool
-      })
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          const { diceDefinitions, dicePools: baselinePools, currentName } = initializeDicePools();
+
+          const mergedPools = new Map(baselinePools);
+          state.dicePools.forEach(pool => {
+            mergedPools.set(pool.name, pool);
+          });
+
+          const currentPoolName = state.currentDicePool?.derivedFrom || currentName;
+          const currentPool = mergedPools.get(currentPoolName);
+
+          state.dicePools = mergedPools;
+          state.definitions = diceDefinitions;
+          state.currentDicePool = currentPool ? currentPool.clone() : mergedPools.get(currentName).clone();
+        }
+      }
     }
   )
 );

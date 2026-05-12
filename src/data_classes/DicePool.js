@@ -2,11 +2,12 @@ import { coalesce } from "../utils/GenericFunctions";
 import DiceCount from "./DiceCount"
 
 export default class DicePool {
-    constructor({ diceCounts, staticBonus, staticSecondaryBonuses, name, diceResultNames, isBaseline, derivedFrom }) {
+    constructor({ diceCounts, staticBonus, staticSecondaryBonuses, name, diceResultNames, isBaseline, derivedFrom, rerollCount }) {
         this.staticBonus = coalesce(staticBonus, 0);
         this.staticSecondaryBonuses = staticSecondaryBonuses;
         this.name = name;
         this.diceCounts = diceCounts.slice();
+        this.rerollCount = coalesce(rerollCount, 0);
         this.addDice = this.addDice.bind(this);
         this.removeDice = this.removeDice.bind(this);
         this.clone = this.clone.bind(this);
@@ -56,7 +57,8 @@ export default class DicePool {
             name : this.name,
             diceResultNames : this.diceResultNames,
             isBaseline : false,
-            derivedFrom : this.derivedFrom
+            derivedFrom : this.derivedFrom,
+            rerollCount : this.rerollCount
         });
     }
 
@@ -68,7 +70,8 @@ export default class DicePool {
             name : json.name,
             diceResultNames : json.diceResultNames,
             isBaseline : json.isBaseline,
-            derivedFrom : json.derivedFrom
+            derivedFrom : json.derivedFrom,
+            rerollCount : json.rerollCount
         });
     }
 }

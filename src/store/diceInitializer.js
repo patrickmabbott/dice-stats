@@ -151,38 +151,84 @@ export function defineDivinityDice() {
   return result;
 }
 
+function getBaseDistribution(dieDefinition, isPrimary) {
+  const curDieFaceCount = dieDefinition.countFaces();
+  const totalFaces = dieDefinition.getNumFaces();
+  const distribution = new Map();
+
+  for (const faceCount of curDieFaceCount.values()) {
+    const { count: curFaceCount, dieFace } = faceCount;
+    const { primaryValue, secondaryValue } = dieFace;
+    const value = isPrimary ? primaryValue : secondaryValue;
+    const curValueCount = distribution.get(value) || 0;
+    distribution.set(value, curValueCount + curFaceCount);
+  }
+
+  const probabilities = new Map();
+  for (const [value, count] of distribution) {
+    probabilities.set(value, count / totalFaces);
+  }
+  return probabilities;
+}
+
+function applyOneReroll(currentDistribution, baseDistribution, average) {
+  const newDistribution = new Map();
+
+  for (const [value, probability] of currentDistribution) {
+    if (value >= average) {
+      newDistribution.set(value, (newDistribution.get(value) || 0) + probability);
+    } else {
+      for (const [rerollValue, rerollProb] of baseDistribution) {
+        const combinedProb = probability * rerollProb;
+        newDistribution.set(rerollValue, (newDistribution.get(rerollValue) || 0) + combinedProb);
+      }
+    }
+  }
+
+  return newDistribution;
+}
+
+function computeEffectiveDistribution(dieDefinition, rerollCount, isPrimary) {
+  if (rerollCount === 0) {
+    return getBaseDistribution(dieDefinition, isPrimary);
+  }
+
+  const average = isPrimary
+    ? dieDefinition.average().primary
+    : dieDefinition.average().secondary;
+  let distribution = getBaseDistribution(dieDefinition, isPrimary);
+
+  for (let i = 0; i < rerollCount; i++) {
+    distribution = applyOneReroll(distribution, getBaseDistribution(dieDefinition, isPrimary), average);
+  }
+
+  return distribution;
+}
+
 function produceResultsSemiIterative(currentDicePool, definitions) {
   const dice = currentDicePool.diceCounts;
   if (dice.length === 0) {
     throw new Error('Attempting to calculate probabilities with no dice');
   }
 
+  const rerollCount = currentDicePool.rerollCount || 0;
+
   const processProbabilities = (flattenedDice, isPrimary) => {
     let iterations = 0;
     let probabilities = new Map();
     flattenedDice.forEach((curDie, idx) => {
       let newProbabilities = new Map();
-      const curDieFaceCount = curDie.countFaces();
-      const totalFaces = curDie.getNumFaces();
 
-      let distribution = new Map();
-      for (const faceCount of curDieFaceCount.values()) {
-        const { count: curFaceCount, dieFace } = faceCount;
-        const { primaryValue, secondaryValue } = dieFace;
-        const value = isPrimary ? primaryValue : secondaryValue;
-        const curValueCount = distribution.get(value) || 0;
-        distribution.set(value, curValueCount + curFaceCount);
-      }
+      const distribution = computeEffectiveDistribution(curDie, rerollCount, isPrimary);
 
       if (idx === 0) {
-        for (const [value, count] of distribution) {
-          newProbabilities.set(value, count / totalFaces);
+        for (const [value, probability] of distribution) {
+          newProbabilities.set(value, probability);
           iterations++;
         }
       } else {
         for (const [accumulatedValue, probabilityOfAccumValue] of probabilities.entries()) {
-          for (const [curFaceValue, curValueCount] of distribution) {
-            const curDieFaceProbability = curValueCount / totalFaces;
+          for (const [curFaceValue, curDieFaceProbability] of distribution) {
             iterations++;
 
             const newValue = accumulatedValue + curFaceValue;
