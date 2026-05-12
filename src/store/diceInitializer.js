@@ -282,4 +282,4 @@ export function estimateAverage(currentDicePool, definitions) {
     );
 }
 
-export { produceResultsSemiIterative };
+export { produceResultsSemiIterative, computeEffectiveDistribution };
